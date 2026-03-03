@@ -1,4 +1,4 @@
-# 🚀 build-backend-boilerplate
+# 🚀 build-backend-boilerplate [![npm version](https://img.shields.io/npm/v/build-backend-boilerplate.svg)](https://www.npmjs.com/package/build-backend-boilerplate)
 
 A production-ready CLI tool to instantly generate a robust Node.js, Express, TypeScript, and MongoDB backend boilerplate. 
 
