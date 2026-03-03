@@ -8,7 +8,7 @@
   },
   "homepage": "https://github.com/Sani-Mohibur/build-backend-boilerplate#readme",
   "name": "build-backend-boilerplate",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "bin": {
     "build-backend-boilerplate": "./bin/cli.js"
   },
