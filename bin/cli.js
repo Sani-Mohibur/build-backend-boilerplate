@@ -1,62 +1,45 @@
 #!/usr/bin/env node
-const { execSync } = require("child_process");
+
+const fs = require("fs-extra");
 const path = require("path");
-const fs = require("fs");
+const { execSync } = require("child_process");
 
-// 1. Get the project name or use default
+// 1. Get the target directory name
 const projectName = process.argv[2] || "my-backend-app";
+const targetPath = path.join(process.cwd(), projectName);
+const templatePath = path.join(__dirname, "../template");
 
-// 2. Define your boilerplate GitHub repository URL
-const gitRepo = "https://github.com/Sani-Mohibur/backend-boilerplate.git";
-
-const projectPath = path.join(process.cwd(), projectName);
+console.log(`🚀 Creating your new project in: ${targetPath}...`);
 
 try {
-  console.log(`🚀 Creating a new project in ${projectPath}...`);
+  // 2. Copy local template
+  fs.copySync(templatePath, targetPath);
 
-  // 3. Clone the repository
-  console.log("📥 Downloading boilerplate...");
-  execSync(`git clone --depth 1 ${gitRepo} ${projectName}`, {
-    stdio: "inherit",
-  });
-
-  // 4. Remove the original .git folder
-  const gitFolderPath = path.join(projectPath, ".git");
-  if (process.platform === "win32") {
-    execSync(`rmdir /s /q "${gitFolderPath}"`);
-  } else {
-    execSync(`rm -rf "${gitFolderPath}"`);
-  }
-
-  // 5. Update package.json name
-  console.log("📝 Updating project details...");
-  const packageJsonPath = path.join(projectPath, "package.json");
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
-
+  // 3. Update package.json name and version
+  const packageJsonPath = path.join(targetPath, "package.json");
+  const packageJson = fs.readJsonSync(packageJsonPath);
   packageJson.name = projectName;
   packageJson.version = "1.0.0";
-  packageJson.description = "";
+  fs.writeJsonSync(packageJsonPath, packageJson, { spaces: 2 });
 
-  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-
-  // 6. Automatically create the .env file
-  console.log("⚙️  Setting up environment variables...");
-  const envExamplePath = path.join(projectPath, ".env.example");
-  const envPath = path.join(projectPath, ".env");
+  // 4. Create .env from .env.example
+  const envExamplePath = path.join(targetPath, ".env.example");
   if (fs.existsSync(envExamplePath)) {
-    fs.copyFileSync(envExamplePath, envPath);
+    fs.copySync(envExamplePath, path.join(targetPath, ".env"));
   }
 
-  // 7. Install dependencies
-  console.log("📦 Installing dependencies...");
-  execSync(`cd ${projectName} && npm install`, { stdio: "inherit" });
+  // 5. Install dependencies
+  console.log("📦 Installing dependencies (this might take a moment)...");
+  execSync("npm install", { cwd: targetPath, stdio: "inherit" });
 
-  console.log("\n🎉 Project setup complete!");
+  // 6. Success message with clear instructions
+  console.log(`\n🎉 Project setup complete!`);
   console.log(`👉 Next steps:`);
-  console.log(`   cd ${projectName}`);
-  console.log(`   Open the .env file and add your MongoDB URI`);
-  console.log(`   npm run dev`);
-} catch (error) {
-  console.error("\n❌ Failed to create project.", error.message);
+  console.log(`   1. cd ${projectName}`);
+  console.log(`   2. Open the .env file in your code editor`);
+  console.log(`   3. Update DATABASE_URL with your MongoDB connection string`);
+  console.log(`   4. Run 'npm run dev' to start the server`);
+} catch (err) {
+  console.error("❌ Failed to create project:", err);
   process.exit(1);
 }

@@ -1,4 +1,26 @@
 {
+  "name": "build-backend-boilerplate",
+  "version": "1.0.4",
+  "description": "A production-ready CLI tool to instantly generate a robust Node.js, Express, TypeScript, and MongoDB backend boilerplate.",
+  "main": "index.js",
+  "bin": {
+    "build-backend-boilerplate": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "boilerplate",
+    "typescript",
+    "express",
+    "mongodb"
+  ],
+  "author": "Sani-Mohibur",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^11.2.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Sani-Mohibur/build-backend-boilerplate.git"
@@ -6,19 +28,5 @@
   "bugs": {
     "url": "https://github.com/Sani-Mohibur/build-backend-boilerplate/issues"
   },
-  "homepage": "https://github.com/Sani-Mohibur/build-backend-boilerplate#readme",
-  "name": "build-backend-boilerplate",
-  "version": "1.0.3",
-  "bin": {
-    "build-backend-boilerplate": "./bin/cli.js"
-  },
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+  "homepage": "https://github.com/Sani-Mohibur/build-backend-boilerplate#readme"
 }
