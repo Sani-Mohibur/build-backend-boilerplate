@@ -1,4 +1,12 @@
 {
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sani-Mohibur/build-backend-boilerplate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sani-Mohibur/build-backend-boilerplate/issues"
+  },
+  "homepage": "https://github.com/Sani-Mohibur/build-backend-boilerplate#readme",
   "name": "build-backend-boilerplate",
   "version": "1.0.2",
   "bin": {
