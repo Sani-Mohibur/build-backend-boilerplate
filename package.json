@@ -1,6 +1,6 @@
 {
   "name": "build-backend-boilerplate",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A production-ready CLI tool to instantly generate a robust Node.js, Express, TypeScript, and MongoDB backend boilerplate.",
   "main": "index.js",
   "bin": {
@@ -19,7 +19,7 @@
   "author": "Sani-Mohibur",
   "license": "ISC",
   "dependencies": {
-    "fs-extra": "^11.2.0"
+    "fs-extra": "^11.3.3"
   },
   "repository": {
     "type": "git",
