@@ -5,6 +5,7 @@ import { jwtHelpers } from '../../helpers/jwtHelpers';
 import { IUser } from '../user/user.interface';
 import { User } from '../user/user.model';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { otpTemplate } from '../../utils/otpTemplate';
 import { sendEmail } from '../../utils/sendEmail';
 
@@ -30,8 +31,8 @@ const registerUser = async (payload: Partial<IUser>) => {
 
   const refreshToken = jwtHelpers.createToken(
     jwtPayload,
-    config.jwt.access_secret as Secret,
-    config.jwt.access_expires_in as string | number,
+    config.jwt.refresh_secret as Secret,
+    config.jwt.refresh_expires_in as string | number,
   );
 
   const { password, ...userWithoutPassword } = newUser.toObject();
@@ -118,7 +119,7 @@ const forgotPassword = async (email: string) => {
   const user = await User.findOne({ email });
   if (!user) throw new AppError(404, 'User not found');
 
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const otp = crypto.randomInt(100000, 999999).toString();
 
   user.otp = otp;
   user.otpExpires = new Date(Date.now() + 5 * 60 * 1000);
@@ -137,7 +138,9 @@ const verifyOtp = async (email: string, otp: string) => {
   const user = await User.findOne({ email }).select('+otp +otpExpires');
   if (!user) throw new AppError(404, 'User not found');
 
-  if (user.otp !== String(otp)) throw new AppError(400, 'Invalid OTP');
+  if (!user.otp || user.otp.length !== String(otp).length || !crypto.timingSafeEqual(Buffer.from(user.otp), Buffer.from(String(otp)))) {
+    throw new AppError(400, 'Invalid OTP');
+  }
   if (user.otpExpires && new Date() > user.otpExpires) {
     throw new AppError(400, 'OTP has expired');
   }
@@ -146,10 +149,22 @@ const verifyOtp = async (email: string, otp: string) => {
   user.otpExpires = undefined;
   await user.save();
 
-  return { message: 'OTP verified successfully' };
+  const resetToken = jwtHelpers.createToken(
+    { id: user._id, email: user.email },
+    config.jwt.access_secret as Secret,
+    '5m'
+  );
+
+  return { resetToken, message: 'OTP verified successfully' };
 };
 
-const resetPassword = async (email: string, newPassword: string) => {
+const resetPassword = async (email: string, newPassword: string, resetToken: string) => {
+  if (!resetToken) throw new AppError(401, 'Reset token is required');
+  try {
+     jwtHelpers.verifyToken(resetToken, config.jwt.access_secret as Secret);
+  } catch (error) {
+     throw new AppError(401, 'Invalid or expired reset token');
+  }
   const user = await User.findOne({ email }).select('+password');
   if (!user) throw new AppError(404, 'User not found');
 

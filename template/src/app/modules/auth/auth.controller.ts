@@ -4,7 +4,7 @@ import { AuthServices } from './auth.service';
 import config from '../../config';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
-import { userResponse } from '../../utils/filterObject';
+import { userResponse } from '../../utils/userResponse';
 import { fileUploader } from '../../utils/fileUploader';
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
@@ -23,6 +23,9 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
   res.cookie('refreshToken', refreshToken, {
     secure: config.env === 'production',
     httpOnly: true,
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 90 * 24 * 60 * 60 * 1000,
   });
 
   sendResponse(res, {
@@ -43,6 +46,9 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   res.cookie('refreshToken', refreshToken, {
     secure: config.env === 'production',
     httpOnly: true,
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 90 * 24 * 60 * 60 * 1000,
   });
 
   sendResponse(res, {
@@ -93,13 +99,16 @@ const verifyOtp = catchAsync(async (req: Request, res: Response) => {
 });
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  const { email, newPassword } = req.body;
-  const result = await AuthServices.resetPassword(email, newPassword);
+  const { email, newPassword, resetToken } = req.body;
+  const result = await AuthServices.resetPassword(email, newPassword, resetToken);
   const { refreshToken, accessToken } = result;
 
   res.cookie('refreshToken', refreshToken, {
     secure: config.env === 'production',
     httpOnly: true,
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 90 * 24 * 60 * 60 * 1000,
   });
 
   sendResponse(res, {
@@ -134,6 +143,8 @@ const logoutUser = catchAsync(async (req: Request, res: Response) => {
   res.clearCookie('refreshToken', {
     secure: config.env === 'production',
     httpOnly: true,
+    sameSite: 'strict',
+    path: '/',
   });
 
   sendResponse(res, {

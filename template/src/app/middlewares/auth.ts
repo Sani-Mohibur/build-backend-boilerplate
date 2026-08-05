@@ -6,13 +6,6 @@ import catchAsync from '../utils/catchAsync';
 import AppError from '../errors/AppError';
 import { jwtHelpers } from '../helpers/jwtHelpers';
 
-declare global {
-    namespace Express {
-        interface Request {
-            user: JwtPayload;
-        }
-    }
-}
 
 const auth = (...requiredRoles: string[]) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -30,10 +23,18 @@ const auth = (...requiredRoles: string[]) => {
         }
 
         // 2. Verify the token using your jwtHelper
-        const decoded = jwtHelpers.verifyToken(
-            token,
-            config.jwt.access_secret as Secret,
-        ) as JwtPayload;
+        let decoded: JwtPayload;
+        try {
+            decoded = jwtHelpers.verifyToken(
+                token,
+                config.jwt.access_secret as Secret,
+            ) as JwtPayload;
+        } catch (error: any) {
+            if (error.name === 'TokenExpiredError') {
+                throw new AppError(httpStatus.UNAUTHORIZED, 'Token has expired');
+            }
+            throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
+        }
 
         const { role } = decoded;
 
