@@ -22,7 +22,7 @@ if (process.argv.includes('--version') || process.argv.includes('-v')) {
 const projectName = process.argv[2] || "my-backend-app";
 
 if (!/^[a-zA-Z0-9_-]+$/.test(projectName)) {
-  console.error(chalk.red('❌ Project name must only contain letters, numbers, hyphens, and underscores.'));
+  console.error(chalk.red('Project name must only contain letters, numbers, hyphens, and underscores.'));
   process.exit(1);
 }
 
@@ -30,11 +30,11 @@ const targetPath = path.join(process.cwd(), projectName);
 const templatePath = path.join(__dirname, "../template");
 
 if (fs.existsSync(targetPath)) {
-  console.error(chalk.red(`❌ Directory "${projectName}" already exists. Aborting.`));
+  console.error(chalk.red(`Directory "${projectName}" already exists. Aborting.`));
   process.exit(1);
 }
 
-console.log(chalk.cyan(`🚀 Creating your new project in: ${targetPath}...`));
+console.log(chalk.cyan(`Creating your new project in: ${targetPath}...`));
 
 try {
   // 2. Copy local template
@@ -56,22 +56,22 @@ try {
   }
 
   // 5. Install dependencies
-  const spinner = ora('📦 Installing dependencies (this might take a moment)...').start();
+  const spinner = ora('Installing dependencies (this might take a moment)...').start();
   try {
     execSync("npm install", { cwd: targetPath, stdio: "ignore" });
-    spinner.succeed(chalk.green('Dependencies installed successfully!'));
+    spinner.succeed(chalk.green('Dependencies installed successfully.'));
   } catch (err) {
     spinner.fail(chalk.red('Failed to install dependencies. You may need to run npm install manually.'));
   }
 
   // 6. Success message with clear instructions
-  console.log(chalk.green(`\n🎉 Project setup complete!`));
-  console.log(chalk.blue(`👉 Next steps:`));
+  console.log(chalk.green(`\nProject setup complete.`));
+  console.log(chalk.blue(`Next steps:`));
   console.log(chalk.white(`   1. cd ${projectName}`));
   console.log(chalk.white(`   2. Open the .env file in your code editor`));
-  console.log(chalk.white(`   3. Update DATABASE_URL with your MongoDB connection string`));
+  console.log(chalk.white(`   3. Update MONGO_URI with your MongoDB connection string`));
   console.log(chalk.white(`   4. Run 'npm run dev' to start the server`));
 } catch (err) {
-  console.error(chalk.red("❌ Failed to create project:"), err);
+  console.error(chalk.red("Failed to create project:"), err);
   process.exit(1);
 }

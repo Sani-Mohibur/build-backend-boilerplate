@@ -9,13 +9,13 @@ let server: Server;
 async function main() {
   try {
     await mongoose.connect(config.database_url as string);
-    logger.info('✅ Database connected successfully');
+    logger.info('Database connected successfully');
 
     server = app.listen(config.port, () => {
-      logger.info(`🚀 Server is running on port ${config.port}`);
+      logger.info(`Server is running on port ${config.port}`);
     });
   } catch (err) {
-    logger.error('❌ Failed to connect to database:', err);
+    logger.error(err, 'Failed to connect to database:');
     process.exit(1); // Exit if DB fails on startup
   }
 }
@@ -23,7 +23,7 @@ async function main() {
 main();
 
 process.on('unhandledRejection', (error) => {
-  logger.error('😈 unhandledRejection detected, shutting down...', error);
+  logger.error(error, 'Unhandled Rejection detected. Shutting down...');
   if (server) {
     server.close(() => {
       process.exit(1);
@@ -34,17 +34,17 @@ process.on('unhandledRejection', (error) => {
 });
 
 process.on('uncaughtException', (error) => {
-  logger.error('😈 uncaughtException detected, shutting down...', error);
+  logger.error(error, 'Uncaught Exception detected. Shutting down...');
   process.exit(1);
 });
 
 // Added for Production Cloud Environments
 process.on('SIGTERM', () => {
-  logger.info('👋 SIGTERM received. Shutting down gracefully...');
+  logger.info('SIGTERM received. Shutting down gracefully...');
   if (server) {
     server.close(async () => {
       await mongoose.disconnect();
-      logger.info('🚫 Process terminated!');
+      logger.info('Process terminated.');
     });
   }
 });

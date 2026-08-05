@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-08-06
+
+### Changed
+- **Professional Logging**: Removed emojis from CLI and Server logs for a cleaner, enterprise-ready aesthetic.
+- **API Response**: Updated the root `GET /` endpoint to return structured JSON (including success, version, and environment) instead of an HTML string.
+
+### Fixed
+- **TypeScript Error**: Fixed a `No overload matches this call` error in `server.ts` by correcting the argument order for the `pino` logger.
+- **CLI Registration**: Fixed an issue where `npm publish` marked the CLI `bin` script reference as invalid.
+
 ## [2.0.0] - 2026-08-06
 
 ### Added
