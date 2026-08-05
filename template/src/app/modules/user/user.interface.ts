@@ -13,4 +13,5 @@ export interface IUser {
   };
   otp?: string | undefined;
   otpExpires?: Date | undefined;
+  isDeleted?: boolean;
 }

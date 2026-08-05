@@ -9,8 +9,7 @@ const createUserValidationSchema = z.object({
       .email('Invalid email address'),
     password: z
       .string()
-      .min(6, 'Password must be at least 6 characters')
-      .optional(),
+      .min(6, 'Password must be at least 6 characters'),
     profileImage: z.string().optional(),
   }),
 });

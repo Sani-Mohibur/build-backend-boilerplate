@@ -4,6 +4,7 @@ import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
 import httpStatus from 'http-status';
 import pick from '../../utils/pick';
+import AppError from '../../errors/AppError';
 
 const getProfile = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user.id;
@@ -20,7 +21,14 @@ const getProfile = catchAsync(async (req: Request, res: Response) => {
 
 const updateProfile = catchAsync(async (req, res) => {
   const userId = req.user.id;
-  const userData = req.body.data ? JSON.parse(req.body.data) : { ...req.body };
+  let userData = { ...req.body };
+  if (req.body.data) {
+    try {
+      userData = JSON.parse(req.body.data);
+    } catch (err) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Invalid JSON format in data field');
+    }
+  }
 
   const result = await UserServices.updateProfile(userId, userData, req.file);
 

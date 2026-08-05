@@ -19,14 +19,16 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024, // 10MB limit
   },
   fileFilter: (req, file, cb) => {
-    const allowedExtensions = /jpeg|jpg|png|gif|mp4|mov|avi|mkv|csv/;
+    const allowedExtensions = /jpeg|jpg|png|gif|mp4|mov|avi|mkv/;
     const ext = path.extname(file.originalname).toLowerCase();
     const isMimetypeValid =
-      allowedExtensions.test(file.mimetype) ||
-      file.mimetype === 'text/csv' ||
-      file.mimetype.startsWith('video/');
+      file.mimetype.startsWith('image/') ||
+      file.mimetype.startsWith('video/') ||
+      file.mimetype === 'text/csv';
 
-    if (allowedExtensions.test(ext) && isMimetypeValid) {
+    const isExtensionValid = allowedExtensions.test(ext) || ext === '.csv';
+
+    if (isExtensionValid && isMimetypeValid) {
       cb(null, true);
     } else {
       cb(
@@ -62,7 +64,7 @@ const uploadToCloudinary = (
 
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: 'Note',
+        folder: 'uploads',
         resource_type: resourceType,
         public_id: safeName,
         // Only apply transformations to images

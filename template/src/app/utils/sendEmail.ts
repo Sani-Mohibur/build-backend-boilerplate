@@ -2,16 +2,17 @@ import nodemailer from 'nodemailer';
 import config from '../config';
 import AppError from '../errors/AppError';
 
+const transporter = nodemailer.createTransport({
+  host: config.email.host,
+  port: Number(config.email.port) || 587,
+  //secure: config.env === 'production',
+  auth: {
+    user: config.email.user,
+    pass: config.email.pass,
+  },
+});
+
 export const sendEmail = async (to: string, html: string, subject: string) => {
-  const transporter = nodemailer.createTransport({
-    host: config.email.host,
-    port: Number(config.email.port) || 587,
-    //secure: config.env === 'production',
-    auth: {
-      user: config.email.user,
-      pass: config.email.pass,
-    },
-  });
 
   try {
     await transporter.sendMail({

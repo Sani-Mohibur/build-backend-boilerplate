@@ -75,7 +75,7 @@ const getSingleUser = async (id: string) => {
 };
 
 const deleteUser = async (id: string) => {
-  const result = await User.findByIdAndDelete(id);
+  const result = await User.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
 
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');

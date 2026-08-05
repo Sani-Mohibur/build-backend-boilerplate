@@ -11,12 +11,13 @@ class QueryBuilder<T> {
 
   search(searchableFields: string[]) {
     const searchTerm = this.query?.searchTerm;
-    if (searchTerm) {
+    if (searchTerm && typeof searchTerm === 'string') {
+      const escapedSearchTerm = searchTerm.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
       this.modelQuery = this.modelQuery.find({
         $or: searchableFields.map(
           (field) =>
             ({
-              [field]: { $regex: searchTerm, $options: 'i' },
+              [field]: { $regex: escapedSearchTerm, $options: 'i' },
             }) as any,
         ),
       });
@@ -30,10 +31,25 @@ class QueryBuilder<T> {
     const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
     excludeFields.forEach((el) => delete queryObj[el]);
 
-    // Make string filters case-insensitive
+    // Sanitize query to prevent NoSQL injection
+    const sanitizeObj = (obj: any) => {
+      if (typeof obj === 'object' && obj !== null) {
+        Object.keys(obj).forEach((k) => {
+          if (k.startsWith('$')) {
+            delete obj[k];
+          } else {
+            sanitizeObj(obj[k]);
+          }
+        });
+      }
+    };
+    sanitizeObj(queryObj);
+
+    // Make string filters case-insensitive and escape regex
     Object.keys(queryObj).forEach((key) => {
       if (typeof queryObj[key] === 'string') {
-        queryObj[key] = { $regex: queryObj[key], $options: 'i' };
+        const escapedValue = (queryObj[key] as string).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+        queryObj[key] = { $regex: escapedValue, $options: 'i' };
       }
     });
 
