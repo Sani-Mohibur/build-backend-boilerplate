@@ -1,6 +1,6 @@
 {
   "name": "build-backend-boilerplate",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A production-ready CLI tool to instantly generate a robust Node.js, Express, TypeScript, and MongoDB backend boilerplate.",
   "files": [
     "bin/",
