@@ -15,10 +15,10 @@ export default [
   {
     rules: {
       'no-unused-vars': 'error',
-      'no-unused-expression': 'error',
+      'no-unused-expressions': 'error',
       'prefer-const': 'error',
       'no-console': 'warn',
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
   {

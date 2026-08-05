@@ -18,11 +18,7 @@
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
     "strict": true,
-
-    // JSX
-    "jsx": "react-jsx",
 
     // Interop Constraints
     "skipLibCheck": true,
