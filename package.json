@@ -19,7 +19,7 @@
   "author": "Sani-Mohibur",
   "license": "ISC",
   "dependencies": {
-    "fs-extra": "^11.3.3"
+    "fs-extra": "^11.4.0"
   },
   "repository": {
     "type": "git",
