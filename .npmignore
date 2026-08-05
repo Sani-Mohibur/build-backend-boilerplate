@@ -1,3 +1,6 @@
 # .npmignore
 .git
 .gitignore
+template/node_modules
+template/package-lock.json
+.DS_Store
