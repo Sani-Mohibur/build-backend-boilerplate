@@ -4,6 +4,10 @@ A production-ready CLI tool to instantly generate a robust Node.js, Express, Typ
 
 Say goodbye to hours of setup. This boilerplate comes pre-configured with a scalable modular architecture, advanced error handling, JWT authentication, Zod validation, and more.
 
+## 📋 Prerequisites
+- **Node.js** >= 18.0.0
+- **MongoDB** instance (local or Atlas)
+
 ## 📦 Quick Start
 
 Run the following command in your terminal to generate a new backend project:
@@ -33,9 +37,11 @@ npm run dev
 
 * **Modular Architecture:** Clean separation of concerns (Controllers, Services, Routes, Models) to scale easily.
 * **Advanced Error Handling:** Global error handling built-in for Zod validation, Mongoose CastErrors, and Duplicate key errors.
-* **Authentication Ready:** JWT helpers, bcrypt password hashing, and role-based auth middlewares included.
+* **Authentication Ready:** JWT helpers, bcrypt password hashing, secure cookies, and role-based auth middlewares included.
+* **Security & Rate Limiting:** Pre-configured with `helmet`, `cors`, and `express-rate-limit` to protect your API from common vulnerabilities.
 * **File Uploads:** Pre-configured `multer` and `cloudinary` integration for handling media files.
 * **Email Support:** Built-in utility for `nodemailer` with OTP templates.
+* **Structured Logging:** Includes a `pino` logger setup for beautiful console logs in development and structured JSON in production.
 * **API Utilities:** Includes reusable `catchAsync`, `sendResponse`, and a powerful `QueryBuilder` for easy pagination, sorting, and filtering.
 * **Developer Experience:** Fully set up with TypeScript, ESLint, Prettier, and `ts-node-dev` for hot reloading.
 
@@ -47,7 +53,6 @@ src/
 │   ├── builder/        # QueryBuilder for advanced filtering/pagination
 │   ├── config/         # Environment variables configuration
 │   ├── errors/         # Custom AppError and Zod/Mongoose error handlers
-│   ├── helpers/        # JWT and Pagination helpers
 │   ├── interfaces/     # Global TypeScript interfaces
 │   ├── middlewares/    # Auth, Validation, GlobalErrorHandler, NotFound
 │   ├── modules/        # Modular domain-driven features
@@ -78,10 +83,10 @@ The CLI automatically copies the `.env.example` file into a new `.env` file for 
 ```env
 NODE_ENV=development
 PORT=5000
-DATABASE_URL=your_mongodb_connection_string_here
+MONGO_URI=your_mongodb_connection_string_here
 
-# Add your JWT secrets, Cloudinary keys, and Nodemailer credentials below
-
+# The boilerplate contains many more configuration options. 
+# Check the generated .env file for a fully documented list.
 ```
 
 ## 🤝 Contributing
