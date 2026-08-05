@@ -15,7 +15,11 @@ const app: Application = express();
 // 1. Security & Performance
 app.use(helmet());
 app.use(compression());
-app.use(morgan('dev'));
+if (config.env === 'development') {
+  app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined'));
+}
 
 // 2. Rate Limiting (Using Config)
 const limiter = rateLimit({
@@ -29,7 +33,7 @@ const limiter = rateLimit({
 app.use('/api/v1', limiter);
 
 // 3. Essential Middlewares
-app.use(cors({ origin: '*', credentials: true }));
+app.use(cors({ origin: config.urls.frontend || 'http://localhost:3000', credentials: true }));
 app.use(cookieParser());
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
